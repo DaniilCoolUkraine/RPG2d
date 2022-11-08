@@ -1,28 +1,28 @@
 fileFormatVersion: 2
-guid: 61cb51b42d2570e4f9e692ae36e837b7
+guid: f3fcf86d36819914eb4db642215a4c93
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 6161428437625172522
-    second: PlayerAttackAnimHighRest_0
+      213: 4016705639448670774
+    second: PlayerIdleAnim_0
   - first:
-      213: 7834726728404370666
-    second: PlayerAttackAnimHighRest_1
+      213: 5379287475840628085
+    second: PlayerIdleAnim_1
   - first:
-      213: 8497651650634615159
-    second: PlayerAttackAnimHighRest_2
+      213: -3145034448879927534
+    second: PlayerIdleAnim_2
   - first:
-      213: 2625941672799363970
-    second: PlayerAttackAnimHighRest_3
+      213: 1448896682391187612
+    second: PlayerIdleAnim_3
   - first:
-      213: 762650631392486266
-    second: PlayerAttackAnimHighRest_4
+      213: -9134787141621614974
+    second: PlayerIdleAnim_4
   - first:
-      213: -2372880386229637483
-    second: PlayerAttackAnimHighRest_5
+      213: -2182935988556015248
+    second: PlayerIdleAnim_5
   - first:
-      213: 7065378910700896118
-    second: PlayerAttackAnimHighRest_6
+      213: -8372999009303801190
+    second: PlayerIdleAnim_6
   externalObjects: {}
   serializedVersion: 11
   mipmaps:
@@ -53,7 +53,7 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     serializedVersion: 2
-    filterMode: 1
+    filterMode: 0
     aniso: 1
     mipBias: 0
     wrapU: 1
@@ -67,7 +67,7 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 256
+  spritePixelsToUnits: 10
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -89,7 +89,7 @@ TextureImporter:
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
-    textureCompression: 1
+    textureCompression: 0
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -101,7 +101,7 @@ TextureImporter:
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
-    textureCompression: 1
+    textureCompression: 0
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -113,7 +113,7 @@ TextureImporter:
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
-    textureCompression: 1
+    textureCompression: 0
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -124,13 +124,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: PlayerAttackAnimHighRest_0
+      name: PlayerIdleAnim_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 512
-        height: 512
+        width: 7
+        height: 17
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -138,20 +138,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: a2273a5f48ac18550800000000000000
-      internalID: 6161428437625172522
+      spriteID: 63275a66f743eb730800000000000000
+      internalID: 4016705639448670774
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: PlayerAttackAnimHighRest_1
+      name: PlayerIdleAnim_1
       rect:
         serializedVersion: 2
-        x: 512
+        x: 7
         y: 0
-        width: 512
-        height: 512
+        width: 7
+        height: 17
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -159,20 +159,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: ae40dc6037a8abc60800000000000000
-      internalID: 7834726728404370666
+      spriteID: 5753036657117aa40800000000000000
+      internalID: 5379287475840628085
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: PlayerAttackAnimHighRest_2
+      name: PlayerIdleAnim_2
       rect:
         serializedVersion: 2
-        x: 1024
+        x: 14
         y: 0
-        width: 512
-        height: 512
+        width: 7
+        height: 17
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -180,20 +180,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 779861d5729bde570800000000000000
-      internalID: 8497651650634615159
+      spriteID: 21f3524f4d79a54d0800000000000000
+      internalID: -3145034448879927534
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: PlayerAttackAnimHighRest_3
+      name: PlayerIdleAnim_3
       rect:
         serializedVersion: 2
-        x: 1536
+        x: 21
         y: 0
-        width: 512
-        height: 512
+        width: 7
+        height: 17
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -201,20 +201,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 283e910e908317420800000000000000
-      internalID: 2625941672799363970
+      spriteID: c903b262bd38b1410800000000000000
+      internalID: 1448896682391187612
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: PlayerAttackAnimHighRest_4
+      name: PlayerIdleAnim_4
       rect:
         serializedVersion: 2
-        x: 2048
+        x: 28
         y: 0
-        width: 512
-        height: 512
+        width: 7
+        height: 17
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -222,20 +222,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: a7360e365ba759a00800000000000000
-      internalID: 762650631392486266
+      spriteID: 28676dc2e77ba3180800000000000000
+      internalID: -9134787141621614974
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: PlayerAttackAnimHighRest_5
+      name: PlayerIdleAnim_5
       rect:
         serializedVersion: 2
-        x: 2560
+        x: 35
         y: 0
-        width: 512
-        height: 512
+        width: 7
+        height: 17
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -243,20 +243,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 59e6a4c5cd5d11fd0800000000000000
-      internalID: -2372880386229637483
+      spriteID: 079d3bab847a4b1e0800000000000000
+      internalID: -2182935988556015248
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: PlayerAttackAnimHighRest_6
+      name: PlayerIdleAnim_6
       rect:
         serializedVersion: 2
-        x: 3072
+        x: 42
         y: 0
-        width: 512
-        height: 512
+        width: 7
+        height: 17
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -264,8 +264,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 67ffcdf6fa44d0260800000000000000
-      internalID: 7065378910700896118
+      spriteID: a92dfb953c12dcb80800000000000000
+      internalID: -8372999009303801190
       vertices: []
       indices: 
       edges: []

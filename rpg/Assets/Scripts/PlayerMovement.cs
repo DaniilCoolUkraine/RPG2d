@@ -1,8 +1,11 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class PlayerMovement : MonoBehaviour
+public class PlayerMovement : MonoBehaviour, IObservable
 {
+    //singleton instance
+    public static PlayerMovement singleton { get; private set; }
+
     //player gameobject components
     private Rigidbody2D _rigidbody2D;
     private SpriteRenderer _playerSprite;
@@ -10,7 +13,23 @@ public class PlayerMovement : MonoBehaviour
     
     //variable to move player and store input 
     private Vector2 _moveDirection = Vector2.zero;
-    
+
+    private bool isRunning = false;
+    private bool IsRunning
+    {
+        get => isRunning;
+        set
+        {
+            isRunning = value;
+            if (value)
+                NotifyRunning();
+            else
+                NotifyIdle();
+        }
+    }
+
+    private delegate void PlayerMovementActionsHandler(EPlayerState state);
+    private event PlayerMovementActionsHandler PlayerMovementActions;
     
     [SerializeField] private float speed;
     [SerializeField] private float jumpHeight;
@@ -22,36 +41,44 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private LayerMask platformsLayer;
     
     //player input class and its properties to store and read input from different devices
-    private PlayerInput _playerControls;
+    private PlayerInput _playerMovementControls;
     private InputAction _move;
-    private InputAction _fire;
     private InputAction _jump;
     private InputAction _dash;
     
     private void Awake()
     {
+        //singleton logic
+        if (!singleton)
+        {
+            singleton = this;
+            DontDestroyOnLoad(this);
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+
+        Subscribe(gameObject.GetComponent<AnimationManager>());
+        
         //getting components from player gameobject
         _rigidbody2D = gameObject.GetComponent<Rigidbody2D>();
         _playerSprite = gameObject.GetComponent<SpriteRenderer>();
         _collider = gameObject.GetComponent<BoxCollider2D>();
         
-        _playerControls = new PlayerInput();
+        _playerMovementControls = new PlayerInput();
     }
     
     private void OnEnable()
     {
-        _move = _playerControls.Player.Move;
+        _move = _playerMovementControls.Player.Move;
         _move.Enable();
 
-        _fire = _playerControls.Player.Fire;
-        _fire.Enable();
-        _fire.performed += Fire;
-
-        _jump = _playerControls.Player.Jump;
+        _jump = _playerMovementControls.Player.Jump;
         _jump.Enable();
         _jump.performed += Jump;
 
-        _dash = _playerControls.Player.Dash;
+        _dash = _playerMovementControls.Player.Dash;
         _dash.Enable();
         _dash.performed += Dash;
     }
@@ -59,7 +86,6 @@ public class PlayerMovement : MonoBehaviour
     private void OnDisable()
     {
         _move.Disable();
-        _fire.Disable();
         _jump.Disable();
         _dash.Disable();
     }
@@ -67,7 +93,9 @@ public class PlayerMovement : MonoBehaviour
     private void Update()
     {
         _moveDirection = _move.ReadValue<Vector2>();
+        
         ChangeFlipState();
+        ChangeRunState();
         
         ChangeDashStateToReady();
     }
@@ -84,6 +112,14 @@ public class PlayerMovement : MonoBehaviour
             _playerSprite.flipX = false;
         if (_moveDirection.x < 0)
             _playerSprite.flipX = true;
+    }
+
+    private void ChangeRunState()
+    {
+        if (_moveDirection.x != 0)
+            IsRunning = true;
+        if (_moveDirection.x == 0)
+            IsRunning = false;
     }
     
     private void ChangeDashStateToReady()
@@ -103,11 +139,6 @@ public class PlayerMovement : MonoBehaviour
     }
 
     #region playerInputActions
-
-    private void Fire(InputAction.CallbackContext context)
-    {
-        Debug.Log("fire");
-    }
 
     private void Jump(InputAction.CallbackContext context)
     {
@@ -135,4 +166,22 @@ public class PlayerMovement : MonoBehaviour
     }
     
     #endregion
+
+    public void Subscribe(IObserver observer)
+    {
+        PlayerMovementActions += observer.ChangeAnimation;
+    }
+    public void Unsubscribe(IObserver observer)
+    {
+        PlayerMovementActions -= observer.ChangeAnimation;
+    }
+
+    private void NotifyRunning()
+    {
+        PlayerMovementActions?.Invoke(EPlayerState.RUNNING);
+    }
+    private void NotifyIdle()
+    {
+        PlayerMovementActions?.Invoke(EPlayerState.IDLE);
+    }
 }
