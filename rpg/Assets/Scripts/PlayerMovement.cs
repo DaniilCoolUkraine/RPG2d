@@ -20,14 +20,38 @@ public class PlayerMovement : MonoBehaviour, IObservable
         get => isRunning;
         set
         {
-            isRunning = value;
-            if (value)
-                NotifyRunning();
-            else
-                NotifyIdle();
+            if (isRunning != value)
+            {
+                isRunning = value;
+                if (value)
+                    NotifyRunning();
+                else
+                {
+                    NotifyIdle();
+                }
+            }
         }
     }
 
+    private bool isJumping = false;
+    private bool IsJumping
+    {
+        get => isJumping;
+        set
+        {
+            if (isJumping != value)
+            {
+                isJumping = value;
+                if (value)
+                    NotifyJumping();
+                else
+                {
+                    NotifyIdle();
+                }
+            }
+        }
+    }
+    
     private delegate void PlayerMovementActionsHandler(EPlayerState state);
     private event PlayerMovementActionsHandler PlayerMovementActions;
     
@@ -105,47 +129,14 @@ public class PlayerMovement : MonoBehaviour, IObservable
         _rigidbody2D.velocity = new Vector2(_moveDirection.x * speed, _rigidbody2D.velocity.y);
     }
 
-    //flip player facing its moving direction
-    private void ChangeFlipState()
-    {
-        if (_moveDirection.x > 0)
-            _playerSprite.flipX = false;
-        if (_moveDirection.x < 0)
-            _playerSprite.flipX = true;
-    }
-
-    private void ChangeRunState()
-    {
-        if (_moveDirection.x != 0)
-            IsRunning = true;
-        if (_moveDirection.x == 0)
-            IsRunning = false;
-    }
-    
-    private void ChangeDashStateToReady()
-    {
-        if (IsGrounded())
-            _dashReady = true;
-    }
-    
-    private bool IsGrounded()
-    {
-        var bounds = _collider.bounds;
-        RaycastHit2D raycastHit2D = Physics2D.BoxCast(bounds.center, bounds.size, 0f, Vector2.down, .1f, platformsLayer);
-        
-        if (raycastHit2D.collider != null) 
-            return true;
-        return false;
-    }
-
     #region playerInputActions
-
     private void Jump(InputAction.CallbackContext context)
     {
-        if (IsGrounded())
+        if (CheckGrounded())
         {
             Vector2 jump = new Vector2(0, jumpHeight);
             _rigidbody2D.AddForce(jump, ForceMode2D.Impulse);
+            IsJumping = true;
         }
     }
 
@@ -166,6 +157,40 @@ public class PlayerMovement : MonoBehaviour, IObservable
     }
     
     #endregion
+    
+    //flip player facing its moving direction
+    private void ChangeFlipState()
+    {
+        if (_moveDirection.x > 0)
+            _playerSprite.flipX = false;
+        if (_moveDirection.x < 0)
+            _playerSprite.flipX = true;
+    }
+    private void ChangeRunState()
+    {
+        if (_moveDirection.x != 0)
+            IsRunning = true;
+        if (_moveDirection.x == 0)
+            IsRunning = false;
+    }
+    private void ChangeDashStateToReady()
+    {
+        if (CheckGrounded())
+            _dashReady = true;
+    }
+    
+    private bool CheckGrounded()
+    {
+        var bounds = _collider.bounds;
+        RaycastHit2D raycastHit2D = Physics2D.BoxCast(bounds.center, bounds.size, 0f, Vector2.down, .1f, platformsLayer);
+
+        if (raycastHit2D.collider != null)
+        {
+            IsJumping = false;
+            return true;
+        }
+        return false;
+    }
 
     public void Subscribe(IObserver observer)
     {
@@ -179,6 +204,10 @@ public class PlayerMovement : MonoBehaviour, IObservable
     private void NotifyRunning()
     {
         PlayerMovementActions?.Invoke(EPlayerState.RUNNING);
+    }
+    private void NotifyJumping()
+    {
+        PlayerMovementActions?.Invoke(EPlayerState.JUMPING);
     }
     private void NotifyIdle()
     {

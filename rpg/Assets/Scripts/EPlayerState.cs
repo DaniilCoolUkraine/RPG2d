@@ -2,5 +2,6 @@ public enum EPlayerState
 {
     RUNNING,
     IDLE,
-    ATTACK
+    ATTACK,
+    JUMPING
 }

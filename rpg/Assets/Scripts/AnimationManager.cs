@@ -27,17 +27,23 @@ public class AnimationManager : MonoBehaviour, IObserver
             case EPlayerState.IDLE:
                 _animator.SetBool("isRunning", false);
                 _animator.SetBool("isAttacking", false);
-                //Debug.Log("Idle");
+                _animator.SetBool("isJumping", false);
                 break;
             case EPlayerState.ATTACK:
                 _animator.SetBool("isAttacking", true);
                 _animator.SetBool("isRunning", false);
-                Debug.Log("Attack");
+                _animator.SetBool("isJumping", false);
                 break;
             case EPlayerState.RUNNING: 
                 _animator.SetBool("isRunning", true);
                 _animator.SetBool("isAttacking", false);
-                // Debug.Log("Run");
+                _animator.SetBool("isJumping", false);
+                break;
+            case EPlayerState.JUMPING: 
+                _animator.SetBool("isRunning", false);
+                _animator.SetBool("isAttacking", false);
+                _animator.SetBool("isJumping", true);
+                Debug.Log("Jump");
                 break;
         }
     }

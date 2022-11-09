@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -6,6 +7,28 @@ public class PlayerAttack : MonoBehaviour, IObservable
     //singleton instance
     public static PlayerAttack singleton { get; private set; }
     
+    private bool isAttackinging = false;
+    private bool IsAttackinging
+    {
+        get => isAttackinging;
+        set
+        {
+            if (isAttackinging != value)
+            {
+                isAttackinging = value;
+                if (value)
+                {
+                    NotifyAttacking();
+                    StartCoroutine(ReturnToIdleState());
+                }
+                else
+                {
+                    NotifyIdle();
+                }
+            }
+        }
+    }
+
     private delegate void PlayerMovementActionsHandler(EPlayerState state);
     private event PlayerMovementActionsHandler PlayerMovementActions;
     
@@ -44,9 +67,15 @@ public class PlayerAttack : MonoBehaviour, IObservable
     
     private void Fire(InputAction.CallbackContext context)
     {
-        NotifyAttacking();
+        IsAttackinging = true;
     }
 
+    private IEnumerator ReturnToIdleState()
+    {
+        yield return new WaitForSeconds(1);
+        IsAttackinging = false;
+    }
+    
     public void Subscribe(IObserver observer)
     {
         PlayerMovementActions += observer.ChangeAnimation;
@@ -56,8 +85,12 @@ public class PlayerAttack : MonoBehaviour, IObservable
         PlayerMovementActions -= observer.ChangeAnimation;
     }
 
-    public void NotifyAttacking()
+    private void NotifyAttacking()
     {
         PlayerMovementActions?.Invoke(EPlayerState.ATTACK);
+    }
+    private void NotifyIdle()
+    {
+        PlayerMovementActions?.Invoke(EPlayerState.IDLE);
     }
 }
