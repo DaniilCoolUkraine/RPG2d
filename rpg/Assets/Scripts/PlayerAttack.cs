@@ -18,12 +18,12 @@ public class PlayerAttack : MonoBehaviour, IObservable
                 isAttackinging = value;
                 if (value)
                 {
-                    NotifyAttacking();
+                    Notify(EPlayerState.ATTACK);
                     StartCoroutine(ReturnToIdleState());
                 }
                 else
                 {
-                    NotifyIdle();
+                    Notify(EPlayerState.IDLE);
                 }
             }
         }
@@ -89,8 +89,8 @@ public class PlayerAttack : MonoBehaviour, IObservable
     {
         PlayerMovementActions?.Invoke(EPlayerState.ATTACK);
     }
-    private void NotifyIdle()
+    public void Notify(EPlayerState state)
     {
-        PlayerMovementActions?.Invoke(EPlayerState.IDLE);
+        PlayerMovementActions?.Invoke(state);
     }
 }

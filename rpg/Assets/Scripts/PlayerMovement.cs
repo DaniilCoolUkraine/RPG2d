@@ -13,26 +13,26 @@ public class PlayerMovement : MonoBehaviour, IObservable
     
     //variable to move player and store input 
     private Vector2 _moveDirection = Vector2.zero;
-
-    private bool isRunning = false;
-    private bool IsRunning
+    private Vector2 MoveDirection
     {
-        get => isRunning;
+        get => _moveDirection;
         set
         {
-            if (isRunning != value)
+            if (_moveDirection != value)
             {
-                isRunning = value;
-                if (value)
-                    NotifyRunning();
+                _moveDirection = value;
+                if(value == Vector2.zero)
+                {
+                    Notify(EPlayerState.IDLE);
+                }
                 else
                 {
-                    NotifyIdle();
+                    Notify(EPlayerState.RUNNING);
                 }
             }
         }
     }
-
+    
     private bool isJumping = false;
     private bool IsJumping
     {
@@ -43,10 +43,10 @@ public class PlayerMovement : MonoBehaviour, IObservable
             {
                 isJumping = value;
                 if (value)
-                    NotifyJumping();
+                    Notify(EPlayerState.JUMPING);
                 else
                 {
-                    NotifyIdle();
+                    Notify(EPlayerState.IDLE);
                 }
             }
         }
@@ -116,17 +116,16 @@ public class PlayerMovement : MonoBehaviour, IObservable
 
     private void Update()
     {
-        _moveDirection = _move.ReadValue<Vector2>();
+        MoveDirection = _move.ReadValue<Vector2>();
         
         ChangeFlipState();
-        ChangeRunState();
-        
+      
         ChangeDashStateToReady();
     }
 
     private void FixedUpdate()
     {
-        _rigidbody2D.velocity = new Vector2(_moveDirection.x * speed, _rigidbody2D.velocity.y);
+        _rigidbody2D.velocity = new Vector2(MoveDirection.x * speed, _rigidbody2D.velocity.y);
     }
 
     #region playerInputActions
@@ -161,17 +160,10 @@ public class PlayerMovement : MonoBehaviour, IObservable
     //flip player facing its moving direction
     private void ChangeFlipState()
     {
-        if (_moveDirection.x > 0)
+        if (MoveDirection.x > 0)
             _playerSprite.flipX = false;
-        if (_moveDirection.x < 0)
+        if (MoveDirection.x < 0)
             _playerSprite.flipX = true;
-    }
-    private void ChangeRunState()
-    {
-        if (_moveDirection.x != 0)
-            IsRunning = true;
-        if (_moveDirection.x == 0)
-            IsRunning = false;
     }
     private void ChangeDashStateToReady()
     {
@@ -189,6 +181,7 @@ public class PlayerMovement : MonoBehaviour, IObservable
             IsJumping = false;
             return true;
         }
+        IsJumping = true;
         return false;
     }
 
@@ -200,17 +193,8 @@ public class PlayerMovement : MonoBehaviour, IObservable
     {
         PlayerMovementActions -= observer.ChangeAnimation;
     }
-
-    private void NotifyRunning()
+    public void Notify(EPlayerState state)
     {
-        PlayerMovementActions?.Invoke(EPlayerState.RUNNING);
-    }
-    private void NotifyJumping()
-    {
-        PlayerMovementActions?.Invoke(EPlayerState.JUMPING);
-    }
-    private void NotifyIdle()
-    {
-        PlayerMovementActions?.Invoke(EPlayerState.IDLE);
+        PlayerMovementActions?.Invoke(state);
     }
 }
