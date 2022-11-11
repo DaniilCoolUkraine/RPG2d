@@ -5,17 +5,27 @@ using UnityEngine.InputSystem;
 public class PlayerAttack : MonoBehaviour, IObservable
 {
     //singleton instance
-    public static PlayerAttack singleton { get; private set; }
+    public static PlayerAttack Singleton { get; private set; }
     
-    private bool isAttackinging = false;
-    private bool IsAttackinging
+    [SerializeField] private float damage;
+    [SerializeField] private float timeBetweenAttack;
+    [SerializeField] private float _currentTime;
+    
+    //player input class and its instances to store and read input from different devices
+    private PlayerInput _playerAttackControls;
+    private InputAction _fire;
+
+    //variable to player attack
+    private bool _canAttack = true;
+    private bool _isAttacking;
+    private bool IsAttacking
     {
-        get => isAttackinging;
+        get => _isAttacking;
         set
         {
-            if (isAttackinging != value)
+            if (_isAttacking != value)
             {
-                isAttackinging = value;
+                _isAttacking = value;
                 if (value)
                 {
                     Notify(EPlayerState.ATTACK);
@@ -29,18 +39,16 @@ public class PlayerAttack : MonoBehaviour, IObservable
         }
     }
 
-    private delegate void PlayerMovementActionsHandler(EPlayerState state);
-    private event PlayerMovementActionsHandler PlayerMovementActions;
+    //delegate and event to notify observers attacking actions
+    private delegate void PlayerAttackActionsHandler(EPlayerState state);
+    private event PlayerAttackActionsHandler PlayerAttackActions;
     
-    private PlayerInput _playerMovementControls;
-    private InputAction _fire;
-
     private void Awake()
     {
         //singleton logic
-        if (!singleton)
+        if (!Singleton)
         {
-            singleton = this;
+            Singleton = this;
             DontDestroyOnLoad(this);
         }
         else
@@ -48,49 +56,70 @@ public class PlayerAttack : MonoBehaviour, IObservable
             Destroy(gameObject);
         }
         
+        //observer logic
         Subscribe(gameObject.GetComponent<AnimationManager>());
         
-        _playerMovementControls = new PlayerInput();
+        //initializing player input
+        _playerAttackControls = new PlayerInput();
     }
-
     private void OnEnable()
     {
-        _fire = _playerMovementControls.Player.Fire;
+        _fire = _playerAttackControls.Player.Fire;
         _fire.Enable();
         _fire.performed += Fire;
     }
-
     private void OnDisable()
     {
         _fire.Disable();
     }
+    private void Start()
+    {
+        _currentTime = timeBetweenAttack;
+    }
+    private void Update()
+    {
+        if (!_canAttack)
+        {
+            ChangeCanAttackState();
+        }
+    }
+
+    private void ChangeCanAttackState()
+    {
+        if (_currentTime <= 0)
+        {
+            _canAttack = true;
+            _currentTime = timeBetweenAttack;
+        }
+        else
+            _currentTime -= Time.deltaTime;
+    }
     
     private void Fire(InputAction.CallbackContext context)
     {
-        IsAttackinging = true;
+        if (_canAttack)
+        {
+            IsAttacking = true;
+            _canAttack = false; 
+        }
     }
-
+    
     private IEnumerator ReturnToIdleState()
     {
         yield return new WaitForSeconds(1);
-        IsAttackinging = false;
+        IsAttacking = false;
     }
     
     public void Subscribe(IObserver observer)
     {
-        PlayerMovementActions += observer.ChangeAnimation;
+        PlayerAttackActions += observer.ChangeAnimation;
     }
     public void Unsubscribe(IObserver observer)
     {
-        PlayerMovementActions -= observer.ChangeAnimation;
-    }
-
-    private void NotifyAttacking()
-    {
-        PlayerMovementActions?.Invoke(EPlayerState.ATTACK);
+        PlayerAttackActions -= observer.ChangeAnimation;
     }
     public void Notify(EPlayerState state)
     {
-        PlayerMovementActions?.Invoke(state);
+        PlayerAttackActions?.Invoke(state);
     }
 }

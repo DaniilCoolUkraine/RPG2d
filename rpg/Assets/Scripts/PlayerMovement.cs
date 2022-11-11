@@ -4,14 +4,29 @@ using UnityEngine.InputSystem;
 public class PlayerMovement : MonoBehaviour, IObservable
 {
     //singleton instance
-    public static PlayerMovement singleton { get; private set; }
+    public static PlayerMovement Singleton { get; private set; }
 
     //player gameobject components
     private Rigidbody2D _rigidbody2D;
     private SpriteRenderer _playerSprite;
     private BoxCollider2D _collider;
     
-    //variable to move player and store input 
+    [SerializeField] private float speed;
+    [SerializeField] private float jumpHeight;
+    [SerializeField] private float dashDistance;
+                     private bool _dashReady = true;
+
+    [Space(10)]
+    [Tooltip("Layer where player can stand and restore jump&dash")]
+    [SerializeField] private LayerMask platformsLayer;
+    
+    //player input class and its instances to store and read input from different devices
+    private PlayerInput _playerMovementControls;
+    private InputAction _move;
+    private InputAction _jump;
+    private InputAction _dash;
+    
+    //variable to move player 
     private Vector2 _moveDirection = Vector2.zero;
     private Vector2 MoveDirection
     {
@@ -33,15 +48,16 @@ public class PlayerMovement : MonoBehaviour, IObservable
         }
     }
     
-    private bool isJumping = false;
+    //variable to player jump 
+    private bool _isJumping;
     private bool IsJumping
     {
-        get => isJumping;
+        get => _isJumping;
         set
         {
-            if (isJumping != value)
+            if (_isJumping != value)
             {
-                isJumping = value;
+                _isJumping = value;
                 if (value)
                     Notify(EPlayerState.JUMPING);
                 else
@@ -52,30 +68,16 @@ public class PlayerMovement : MonoBehaviour, IObservable
         }
     }
     
+    //delegate and event to notify observers moving actions
     private delegate void PlayerMovementActionsHandler(EPlayerState state);
     private event PlayerMovementActionsHandler PlayerMovementActions;
-    
-    [SerializeField] private float speed;
-    [SerializeField] private float jumpHeight;
-    [SerializeField] private float dashDistance;
-                     private bool _dashReady = true;
-
-    [Space(10)]
-    [Tooltip("Layer where player can stand and restore jump&dash")]
-    [SerializeField] private LayerMask platformsLayer;
-    
-    //player input class and its properties to store and read input from different devices
-    private PlayerInput _playerMovementControls;
-    private InputAction _move;
-    private InputAction _jump;
-    private InputAction _dash;
     
     private void Awake()
     {
         //singleton logic
-        if (!singleton)
+        if (!Singleton)
         {
-            singleton = this;
+            Singleton = this;
             DontDestroyOnLoad(this);
         }
         else
@@ -83,6 +85,7 @@ public class PlayerMovement : MonoBehaviour, IObservable
             Destroy(gameObject);
         }
 
+        //observer logic
         Subscribe(gameObject.GetComponent<AnimationManager>());
         
         //getting components from player gameobject
@@ -90,9 +93,9 @@ public class PlayerMovement : MonoBehaviour, IObservable
         _playerSprite = gameObject.GetComponent<SpriteRenderer>();
         _collider = gameObject.GetComponent<BoxCollider2D>();
         
+        //initializing player input
         _playerMovementControls = new PlayerInput();
     }
-    
     private void OnEnable()
     {
         _move = _playerMovementControls.Player.Move;
@@ -106,14 +109,12 @@ public class PlayerMovement : MonoBehaviour, IObservable
         _dash.Enable();
         _dash.performed += Dash;
     }
-
     private void OnDisable()
     {
         _move.Disable();
         _jump.Disable();
         _dash.Disable();
     }
-
     private void Update()
     {
         MoveDirection = _move.ReadValue<Vector2>();
@@ -122,7 +123,6 @@ public class PlayerMovement : MonoBehaviour, IObservable
       
         ChangeDashStateToReady();
     }
-
     private void FixedUpdate()
     {
         _rigidbody2D.velocity = new Vector2(MoveDirection.x * speed, _rigidbody2D.velocity.y);

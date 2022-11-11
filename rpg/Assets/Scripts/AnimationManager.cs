@@ -43,7 +43,6 @@ public class AnimationManager : MonoBehaviour, IObserver
                 _animator.SetBool("isRunning", false);
                 _animator.SetBool("isAttacking", false);
                 _animator.SetBool("isJumping", true);
-                Debug.Log("Jump");
                 break;
         }
     }
