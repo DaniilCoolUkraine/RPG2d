@@ -10,16 +10,18 @@ public class PlayerMovement : MonoBehaviour, IObservable
     private Rigidbody2D _rigidbody2D;
     private SpriteRenderer _playerSprite;
     private BoxCollider2D _collider;
-    
+
     [SerializeField] private float speed;
     [SerializeField] private float jumpHeight;
     [SerializeField] private float dashDistance;
                      private bool _dashReady = true;
-
+                     
     [Space(10)]
     [Tooltip("Layer where player can stand and restore jump&dash")]
     [SerializeField] private LayerMask platformsLayer;
-    
+
+    [SerializeField] private GameObject attackTriggerPosition;
+
     //player input class and its instances to store and read input from different devices
     private PlayerInput _playerMovementControls;
     private InputAction _move;
@@ -60,10 +62,10 @@ public class PlayerMovement : MonoBehaviour, IObservable
                 _isJumping = value;
                 if (value)
                     Notify(EPlayerState.JUMPING);
-                else
-                {
-                    Notify(EPlayerState.IDLE);
-                }
+                // else
+                // {
+                //     Notify(EPlayerState.IDLE);
+                // }
             }
         }
     }
@@ -161,9 +163,15 @@ public class PlayerMovement : MonoBehaviour, IObservable
     private void ChangeFlipState()
     {
         if (MoveDirection.x > 0)
+        {
             _playerSprite.flipX = false;
+            attackTriggerPosition.transform.localPosition = Vector3.right;
+        }
         if (MoveDirection.x < 0)
+        {
             _playerSprite.flipX = true;
+            attackTriggerPosition.transform.localPosition = Vector3.left;
+        }
     }
     private void ChangeDashStateToReady()
     {
