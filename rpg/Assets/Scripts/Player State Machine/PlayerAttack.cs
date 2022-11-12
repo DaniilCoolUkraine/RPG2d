@@ -4,20 +4,18 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class PlayerAttack : MonoBehaviour, IObservable
+public class PlayerAttack : MonoBehaviour
 {
-    //singleton instance
-    public static PlayerAttack Singleton { get; private set; }
-    
-    [SerializeField] private float damage;
+    /*[SerializeField] private float damage;
     [SerializeField] private float timeBetweenAttack;
-                     private float _currentTime;
     [Header("Attack range properties")]
     [SerializeField] private Transform attackTriggerPosition;
     [SerializeField] private float attackTriggerRadius;
-    [SerializeField] private LayerMask enemyLayer;
+    [SerializeField] private LayerMask enemyLayer;*/
+                     private float _currentTime;
 
     //player input class and its instances to store and read input from different devices
+    //Attack
     private PlayerInput _playerAttackControls;
     private InputAction _fire;
 
@@ -34,12 +32,12 @@ public class PlayerAttack : MonoBehaviour, IObservable
                 _isAttacking = value;
                 if (value)
                 {
-                    Notify(EPlayerState.ATTACK);
+                    //Notify(EPlayerState.ATTACK);
                     StartCoroutine(ReturnToIdleState());
                 }
                 else
                 {
-                    Notify(EPlayerState.IDLE);
+                    //Notify(EPlayerState.IDLE);
                 }
             }
         }
@@ -51,19 +49,8 @@ public class PlayerAttack : MonoBehaviour, IObservable
     
     private void Awake()
     {
-        //singleton logic
-        if (!Singleton)
-        {
-            Singleton = this;
-            DontDestroyOnLoad(this);
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
-        
         //observer logic
-        Subscribe(gameObject.GetComponent<AnimationManager>());
+        //Subscribe(gameObject.GetComponent<AnimationManager>());
         
         //initializing player input
         _playerAttackControls = new PlayerInput();
@@ -137,7 +124,7 @@ public class PlayerAttack : MonoBehaviour, IObservable
         IsAttacking = false;
     }
     
-    public void Subscribe(IObserver observer)
+    /*public void Subscribe(IObserver observer)
     {
         PlayerAttackActions += observer.ChangeAnimation;
     }
@@ -148,5 +135,5 @@ public class PlayerAttack : MonoBehaviour, IObservable
     public void Notify(EPlayerState state)
     {
         PlayerAttackActions?.Invoke(state);
-    }
+    }*/
 }
