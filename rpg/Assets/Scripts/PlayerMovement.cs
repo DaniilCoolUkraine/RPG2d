@@ -62,10 +62,6 @@ public class PlayerMovement : MonoBehaviour, IObservable
                 _isJumping = value;
                 if (value)
                     Notify(EPlayerState.JUMPING);
-                // else
-                // {
-                //     Notify(EPlayerState.IDLE);
-                // }
             }
         }
     }
