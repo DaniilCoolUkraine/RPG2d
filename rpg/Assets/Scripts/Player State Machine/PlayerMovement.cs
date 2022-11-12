@@ -29,11 +29,11 @@ public class PlayerMovement : MonoBehaviour
     //Running, Jump, Dash
     /*private PlayerInput _playerMovementControls;*/
     //Running
-    private InputAction _move;
+    /*private InputAction _move;
     //Jump
     private InputAction _jump;
     //Dash
-    private InputAction _dash;
+    private InputAction _dash;*/
     
     //variable to move player 
     //Running
