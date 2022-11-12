@@ -127,8 +127,8 @@ public class PlayerAttack : MonoBehaviour, IObservable
     }
     private IEnumerator DamageEnemy(Collider2D enemy)
     {
-        yield return new WaitForSeconds(.5f);
-        enemy.gameObject.GetComponent<Unit>().TakeDamage(damage);
+        yield return new WaitForSeconds(timeBetweenAttack);
+        enemy.gameObject.GetComponent<IDamageable>().TakeDamage(damage);
     }
     
     private IEnumerator ReturnToIdleState()
