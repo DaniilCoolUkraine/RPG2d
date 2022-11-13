@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class AnimationManager : MonoBehaviour, IObserver
+public class AnimationManager : MonoBehaviour
 {
     public static AnimationManager singleton { get; private set; }
 

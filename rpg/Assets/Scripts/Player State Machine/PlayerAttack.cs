@@ -12,9 +12,11 @@ public class PlayerAttack : MonoBehaviour
     [SerializeField] private Transform attackTriggerPosition;
     [SerializeField] private float attackTriggerRadius;
     [SerializeField] private LayerMask enemyLayer;*/
-                     private float _currentTime;
+
 
     //player input class and its instances to store and read input from different devices
+    #region WORKING
+    /*private float _currentTime;
     //Attack
     private PlayerInput _playerAttackControls;
     private InputAction _fire;
@@ -46,12 +48,12 @@ public class PlayerAttack : MonoBehaviour
     //delegate and event to notify observers attacking actions
     private delegate void PlayerAttackActionsHandler(EPlayerState state);
     private event PlayerAttackActionsHandler PlayerAttackActions;
-    
+
     private void Awake()
     {
         //observer logic
         //Subscribe(gameObject.GetComponent<AnimationManager>());
-        
+
         //initializing player input
         _playerAttackControls = new PlayerInput();
     }
@@ -81,7 +83,7 @@ public class PlayerAttack : MonoBehaviour
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(attackTriggerPosition.position, attackTriggerRadius);
     }
-    
+
     private void ChangeCanAttackState()
     {
         if (_currentTime <= 0)
@@ -99,14 +101,14 @@ public class PlayerAttack : MonoBehaviour
 
         return enemy;
     }
-    
+
     private void Fire(InputAction.CallbackContext context)
     {
         if (_canAttack)
         {
             IsAttacking = true;
-            _canAttack = false; 
-            
+            _canAttack = false;
+
             Collider2D enemy = GetEnemyToDamage();
             if (enemy != null)
                 StartCoroutine(DamageEnemy(enemy));
@@ -117,13 +119,14 @@ public class PlayerAttack : MonoBehaviour
         yield return new WaitForSeconds(.3f);
         enemy.gameObject.GetComponent<IDamageable>().TakeDamage(damage);
     }
-    
+
     private IEnumerator ReturnToIdleState()
     {
         yield return new WaitForSeconds(1);
         IsAttacking = false;
-    }
-    
+    }*/
+    #endregion
+
     /*public void Subscribe(IObserver observer)
     {
         PlayerAttackActions += observer.ChangeAnimation;

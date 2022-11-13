@@ -3,28 +3,35 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public abstract class PlayerState<T> where T : PlayerStateData
+//Attack
+public abstract class PlayerState
 {
-    protected T Data { get; private set; }
+    protected PlayerEntity Data { get; private set; }
 
     protected PlayerInput PlayerMovementControls { get; private set; }
     protected InputAction Action { get; set; }
 
-    public PlayerState(T data)
+    protected string IS_ATTACKING => "isAttacking";
+    protected string IS_RUNNING => "isRunning";
+    protected string IS_JUMPING => "isJumping";
+
+    public PlayerState(PlayerEntity data)
     {
         Data = data;
     }
 
-    //Start
-    public virtual void Start()
+    //OnEnable
+    public virtual void Enter()
     {
         PlayerMovementControls = new PlayerInput();
     }
 
-    //OnEnable
-    public abstract void Enter();
-
     public virtual void StateUpdate()
+    {
+
+    }
+
+    public virtual void TransitionCheck()
     {
 
     }
@@ -35,39 +42,44 @@ public abstract class PlayerState<T> where T : PlayerStateData
     }
 
     //OnDisable
-    public abstract void Exit();
+    public virtual void Exit()
+    {
+
+    }
 }
 
-public abstract class PlayerMovementState<T> : PlayerState<T> where T : PlayerStateData
+//Running, Jump, and Dash
+public abstract class PlayerMovementState : PlayerState
 {
     protected Rigidbody2D Rb { get; private set; }
 
-    public PlayerMovementState(T data) : base(data)
+    public PlayerMovementState(PlayerEntity data) : base(data)
     {
         
     }
 
-    public override void Start()
+    public override void Enter()
     {
-        base.Start();
-        Rb = Data.Unit.GetComponent<Rigidbody2D>();
+        base.Enter();
+        Rb = Data.GetComponent<Rigidbody2D>();
     }
 }
 
-public abstract class PlayerGroundedState<T> : PlayerMovementState<T> where T : PlayerGroundedStateData
+//Jump and Dash
+public abstract class PlayerGroundedState : PlayerMovementState
 {
     protected bool IsJumping { get; private set; }
     protected BoxCollider2D Collider;
 
-    public PlayerGroundedState(T data) : base(data)
+    public PlayerGroundedState(PlayerEntity data) : base(data)
     {
 
     }
 
-    public override void Start()
+    public override void Enter()
     {
-        base.Start();
-        Collider = Data.Unit.GetComponent<BoxCollider2D>();
+        base.Enter();
+        Collider = Data.GetComponent<BoxCollider2D>();
     }
 
     protected bool CheckGrounded()
@@ -82,5 +94,97 @@ public abstract class PlayerGroundedState<T> : PlayerMovementState<T> where T : 
         }
         IsJumping = true;
         return false;
+    }
+}
+
+public class Idle : PlayerState
+{
+    private Vector2 _moveDirection = Vector2.zero;
+
+    public Idle(PlayerEntity data) : base(data)
+    {
+    }
+
+    public override void Enter()
+    {
+        base.Enter();
+        Data.Animator.SetBool(IS_RUNNING, false);
+        Data.Animator.SetBool(IS_ATTACKING, false);
+        Data.Animator.SetBool(IS_JUMPING, false);
+
+        Action = PlayerMovementControls.Player.Move;
+        Action.Enable();
+    }
+
+    public override void StateUpdate()
+    {
+        base.StateUpdate();
+        _moveDirection = Action.ReadValue<Vector2>();
+    }
+
+    public override void TransitionCheck()
+    {
+        base.TransitionCheck();
+        if (_moveDirection != Vector2.zero)
+        {
+            Data.StateMachine.ChangeState(new Running(Data));
+        }
+    }
+
+    public override void Exit()
+    {
+        Action.Disable();
+    }
+}
+
+public class Running : PlayerMovementState
+{
+    private Vector2 _moveDirection = Vector2.zero;
+
+    public Running(PlayerEntity data) : base(data)
+    {
+    }
+
+    public override void Enter()
+    {
+        base.Enter();
+        Data.Animator.SetBool(IS_RUNNING, true);
+        Data.Animator.SetBool(IS_ATTACKING, false);
+        Data.Animator.SetBool(IS_JUMPING, false);
+
+        Action = PlayerMovementControls.Player.Move;
+        Action.Enable();
+    }
+
+    public override void StateUpdate()
+    {
+        base.StateUpdate();
+        _moveDirection = Action.ReadValue<Vector2>();
+        ChangeFlipState();
+    }
+
+    public override void TransitionCheck()
+    {
+        base.TransitionCheck();
+        if (_moveDirection == Vector2.zero)
+        {
+            Data.StateMachine.ChangeState(new Idle(Data));
+        }
+    }
+
+    public override void PhysicsUpdate()
+    {
+        base.PhysicsUpdate();
+        Rb.velocity = new Vector2(_moveDirection.x * Data.Speed, Rb.velocity.y);
+    }
+
+    public override void Exit()
+    {
+        Action.Disable();
+    }
+
+    private void ChangeFlipState()
+    {
+        Data.transform.localScale = new Vector3(1 * Mathf.Sign(_moveDirection.x), 1, 1);
     }
 }

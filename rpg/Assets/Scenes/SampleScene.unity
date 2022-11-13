@@ -1178,6 +1178,7 @@ GameObject:
   - component: {fileID: 436392723}
   - component: {fileID: 436392721}
   - component: {fileID: 436392725}
+  - component: {fileID: 436392726}
   m_Layer: 0
   m_Name: character
   m_TagString: Untagged
@@ -1263,13 +1264,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5ff2972c306bec24799958ea4ddee07e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 7
-  jumpHeight: 20
-  dashDistance: 8000
-  platformsLayer:
-    serializedVersion: 2
-    m_Bits: 64
-  attackTriggerPosition: {fileID: 495880296}
 --- !u!50 &436392719
 Rigidbody2D:
   serializedVersion: 4
@@ -1343,13 +1337,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f73ff6451b6dba74db29dbc95bb83c5c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damage: 1
-  timeBetweenAttack: 1
-  attackTriggerPosition: {fileID: 495880297}
-  attackTriggerRadius: 1
-  enemyLayer:
-    serializedVersion: 2
-    m_Bits: 8
 --- !u!114 &436392723
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1394,7 +1381,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1b19716909774b2299d59cccb8f102e7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  health: 5
+  health: 0
+--- !u!114 &436392726
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 436392715}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5d4d3869145352f45840220ba0202786, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  PlatformsLayer:
+    serializedVersion: 2
+    m_Bits: 64
+  Damage: 1
+  TimeBetweenAttack: 1
+  AttackTriggerPosition: {fileID: 495880297}
+  AttackTriggerRadius: 1
+  EnemyLayer:
+    serializedVersion: 2
+    m_Bits: 8
+  Speed: 7
+  DashDistance: 8000
+  DashReady: 1
+  JumpHeight: 20
 --- !u!1 &482561498
 GameObject:
   m_ObjectHideFlags: 0

@@ -37,7 +37,7 @@ public class PlayerMovement : MonoBehaviour
     
     //variable to move player 
     //Running
-    private Vector2 _moveDirection = Vector2.zero;
+    /*private Vector2 _moveDirection = Vector2.zero;
     private Vector2 MoveDirection
     {
         get => _moveDirection;
@@ -56,7 +56,7 @@ public class PlayerMovement : MonoBehaviour
                 }
             }
         }
-    }
+    }*/
     
     //variable to player jump 
     //Jump and Dash
@@ -92,11 +92,12 @@ public class PlayerMovement : MonoBehaviour
         /*_playerMovementControls = new PlayerInput();*/
     }
 
-    private void OnEnable()
+    #region WORKING
+    /*private void OnEnable()
     {
         //Running
-        _move = _playerMovementControls.Player.Move;
-        _move.Enable();
+        *//*_move = _playerMovementControls.Player.Move;
+        _move.Enable();*//*
 
         //Jump
         _jump = _playerMovementControls.Player.Jump;
@@ -112,7 +113,7 @@ public class PlayerMovement : MonoBehaviour
     private void OnDisable()
     {
         //Running
-        _move.Disable();
+        *//*_move.Disable();*//*
         //Jump
         _jump.Disable();
         //Dash
@@ -122,11 +123,11 @@ public class PlayerMovement : MonoBehaviour
     private void Update()
     {
         //Running
-        MoveDirection = _move.ReadValue<Vector2>();
-        
+        *//*MoveDirection = _move.ReadValue<Vector2>();
+
         //Running
-        ChangeFlipState();
-      
+        ChangeFlipState();*//*
+
         //Dash
         ChangeDashStateToReady();
     }
@@ -134,7 +135,7 @@ public class PlayerMovement : MonoBehaviour
     private void FixedUpdate()
     {
         //Running
-        _rigidbody2D.velocity = new Vector2(MoveDirection.x * speed, _rigidbody2D.velocity.y);
+        *//*_rigidbody2D.velocity = new Vector2(MoveDirection.x * speed, _rigidbody2D.velocity.y);*//*
     }
 
     #region playerInputActions
@@ -153,31 +154,32 @@ public class PlayerMovement : MonoBehaviour
     private void Dash(InputAction.CallbackContext context)
     {
         Vector2 dash = new Vector2(dashDistance * Mathf.Sign(transform.localScale.x), 0);
-        
+
         if (_dashReady)
         {
             _rigidbody2D.AddForce(dash);
-            
+
             _dashReady = false;
         }
     }
-    
+
     #endregion
-    
+
     //Running
     //flip player facing its moving direction
-    private void ChangeFlipState()
+    *//*private void ChangeFlipState()
     {
         transform.localScale = new Vector3(1 * Mathf.Sign(MoveDirection.x), 1, 1);
-    }
+    }*//*
 
     //Dash
     private void ChangeDashStateToReady()
     {
         if (CheckGrounded())
             _dashReady = true;
-    }
-    
+    }*/
+    #endregion
+
     //Jump and Dash
     /*private bool CheckGrounded()
     {
