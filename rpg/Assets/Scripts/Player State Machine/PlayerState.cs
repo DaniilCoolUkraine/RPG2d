@@ -48,7 +48,7 @@ public abstract class PlayerState
     }
 }
 
-//Running, Jump, and Dash
+//Running, Jump, Dash, and Idle
 public abstract class PlayerMovementState : PlayerState
 {
     protected Rigidbody2D Rb { get; private set; }
@@ -97,7 +97,7 @@ public abstract class PlayerGroundedState : PlayerMovementState
     }
 }
 
-public class Idle : PlayerState
+public class Idle : PlayerGroundedState
 {
     private Vector2 _moveDirection = Vector2.zero;
 
@@ -114,6 +114,8 @@ public class Idle : PlayerState
 
         Action = PlayerMovementControls.Player.Move;
         Action.Enable();
+
+        Rb.velocity = Vector2.zero;
     }
 
     public override void StateUpdate()
