@@ -15,10 +15,9 @@ public class PlayerMovement : MonoBehaviour, IObservable
     [SerializeField] private float jumpHeight;
     [SerializeField] private float dashDistance;
                      private bool _dashReady = true;
-                     
     [Space(10)]
     [Tooltip("Layer where player can stand and restore jump&dash")]
-    [SerializeField] private LayerMask platformsLayer;
+    [SerializeField] private LayerMask[] platformsLayer;
 
     [SerializeField] private GameObject attackTriggerPosition;
 
@@ -178,7 +177,11 @@ public class PlayerMovement : MonoBehaviour, IObservable
     private bool CheckGrounded()
     {
         var bounds = _collider.bounds;
-        RaycastHit2D raycastHit2D = Physics2D.BoxCast(bounds.center, bounds.size, 0f, Vector2.down, .1f, platformsLayer);
+        RaycastHit2D raycastHit2D = new RaycastHit2D();
+        foreach (LayerMask layerMask in platformsLayer)
+        {
+            raycastHit2D = Physics2D.BoxCast(bounds.center, bounds.size, 0f, Vector2.down, .1f, layerMask);   
+        }
 
         if (raycastHit2D.collider != null)
         {
