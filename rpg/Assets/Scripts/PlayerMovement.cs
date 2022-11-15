@@ -19,7 +19,11 @@ public class PlayerMovement : MonoBehaviour, IObservable
     [Tooltip("Layer where player can stand and restore jump&dash")]
     [SerializeField] private LayerMask[] platformsLayer;
 
+    [SerializeField] private ParticleSystem dashParticles;
     [SerializeField] private GameObject attackTriggerPosition;
+    
+    [SerializeField] private AudioSource _jumpSound;
+    [SerializeField] private AudioSource _dashSound;
 
     //player input class and its instances to store and read input from different devices
     private PlayerInput _playerMovementControls;
@@ -133,6 +137,7 @@ public class PlayerMovement : MonoBehaviour, IObservable
             Vector2 jump = new Vector2(0, jumpHeight);
             _rigidbody2D.AddForce(jump, ForceMode2D.Impulse);
             IsJumping = true;
+            _jumpSound.Play();
         }
     }
 
@@ -147,8 +152,9 @@ public class PlayerMovement : MonoBehaviour, IObservable
         if (_dashReady)
         {
             _rigidbody2D.AddForce(dash);
-            
+            Instantiate(dashParticles, transform.position, Quaternion.identity);
             _dashReady = false;
+            _dashSound.Play();
         }
     }
     

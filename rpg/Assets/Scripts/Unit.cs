@@ -18,9 +18,5 @@ public class Unit : MonoBehaviour, IDamageable
     public virtual void TakeDamage(float damage)
     {
         Health -= damage;
-        if (health <= 0)
-        {
-            Destroy(gameObject);
-        }
     }
 }

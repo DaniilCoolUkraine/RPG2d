@@ -1,6 +1,4 @@
-using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -16,6 +14,8 @@ public class PlayerAttack : MonoBehaviour, IObservable
     [SerializeField] private Transform attackTriggerPosition;
     [SerializeField] private float attackTriggerRadius;
     [SerializeField] private LayerMask enemyLayer;
+
+    [SerializeField] private AudioSource[] _attackSounds;
 
     //player input class and its instances to store and read input from different devices
     private PlayerInput _playerAttackControls;
@@ -106,13 +106,6 @@ public class PlayerAttack : MonoBehaviour, IObservable
             _currentTime -= Time.deltaTime;
     }
 
-    private Collider2D GetEnemyToDamage()
-    {
-        Collider2D enemy = Physics2D.OverlapCircle(attackTriggerPosition.position, attackTriggerRadius, enemyLayer);
-
-        return enemy;
-    }
-    
     private void Fire(InputAction.CallbackContext context)
     {
         if (_canAttack)
@@ -120,10 +113,18 @@ public class PlayerAttack : MonoBehaviour, IObservable
             IsAttacking = true;
             _canAttack = false; 
             
-            Collider2D enemy = GetEnemyToDamage();
+            Collider2D? enemy = GetEnemyToDamage();
             if (enemy != null)
                 StartCoroutine(DamageEnemy(enemy));
+            
+            _attackSounds[Random.Range(0, _attackSounds.Length)].Play();
         }
+    }
+    private Collider2D GetEnemyToDamage()
+    {
+        Collider2D? enemy = Physics2D.OverlapCircle(attackTriggerPosition.position, attackTriggerRadius, enemyLayer);
+
+        return enemy;
     }
     private IEnumerator DamageEnemy(Collider2D enemy)
     {
