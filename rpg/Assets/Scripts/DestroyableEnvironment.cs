@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class DestroyableEnviroment : MonoBehaviour, IDamageable
+public class DestroyableEnvironment : MonoBehaviour, IDamageable
 {
     public void TakeDamage(float damage)
     {
