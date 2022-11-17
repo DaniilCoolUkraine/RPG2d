@@ -2,16 +2,16 @@ using UnityEngine;
 
 public class AnimationManager : MonoBehaviour, IObserver
 {
-    public static AnimationManager singleton { get; private set; }
+    public static AnimationManager Singleton { get; private set; }
 
     [SerializeField] private Animator _animator;
 
     private void Awake()
     {
         //singleton logic
-        if (!singleton)
+        if (!Singleton)
         {
-            singleton = this;
+            Singleton = this;
             DontDestroyOnLoad(this);
         }
         else

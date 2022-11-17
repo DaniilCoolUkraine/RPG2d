@@ -1,5 +1,3 @@
-using JetBrains.Annotations;
-
 public interface IObservable
 {
     public void Subscribe(IObserver observer);
